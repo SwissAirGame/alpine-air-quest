@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { MapPin, Camera, Mountain, Clock, Users, Leaf, Gift, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-grindelwald.jpg";
 import edelweissImage from "@/assets/edelweiss-flower.png";
 import swissAirJar from "@/assets/swiss-air-jar.png";
+import PaymentModal from "@/components/PaymentModal";
 
 const Index = () => {
+  const [paymentOpen, setPaymentOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -16,25 +21,18 @@ const Index = () => {
             alt="Панорама Гриндельвальда в Швейцарских Альпах"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/10 to-background/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-foreground/20 to-foreground/60" />
         </div>
 
         {/* Hero Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto animate-fade-in-up">
-          <div className="mb-6">
-            <img
-              src={edelweissImage}
-              alt="Эдельвейс"
-              className="w-20 h-20 mx-auto animate-float opacity-90"
-            />
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-foreground mb-6 drop-shadow-lg">
-            Найди эдельвейс
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-alpine-snow mb-6 drop-shadow-lg">
+            #SwissAirGame
           </h1>
-          <p className="font-serif text-xl md:text-2xl text-foreground/90 mb-4 italic">
+          <p className="font-serif text-2xl md:text-3xl text-alpine-snow mb-4 italic drop-shadow-md">
             Игра-путешествие по самым красивым местам Гриндельвальда
           </p>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-alpine-snow/95 text-xl md:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-md">
             Это не квест на скорость.<br />
             Это путь к горам, тишине и настоящим эмоциям.
           </p>
@@ -45,8 +43,8 @@ const Index = () => {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-pulse-slow">
-          <div className="w-6 h-10 rounded-full border-2 border-foreground/30 flex items-start justify-center p-2">
-            <div className="w-1 h-2 bg-foreground/50 rounded-full animate-bounce" />
+          <div className="w-6 h-10 rounded-full border-2 border-alpine-snow/30 flex items-start justify-center p-2">
+            <div className="w-1 h-2 bg-alpine-snow/50 rounded-full animate-bounce" />
           </div>
         </div>
       </section>
@@ -194,12 +192,14 @@ const Index = () => {
             Откройте для себя Гриндельвальд так, как его видят немногие
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="xl">
+            <Button variant="hero" size="xl" onClick={() => setPaymentOpen(true)}>
               Найти эдельвейс
             </Button>
-            <Button variant="alpineOutline" size="xl">
-              Узнать больше
-            </Button>
+            <Link to="/shop">
+              <Button variant="alpineOutline" size="xl">
+                Магазин Сувениров
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -209,13 +209,15 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Wind className="w-5 h-5" />
-            <span className="font-serif text-lg">Найди эдельвейс</span>
+            <span className="font-serif text-lg">#SwissAirGame</span>
           </div>
           <p className="text-primary-foreground/60 text-sm">
             Гриндельвальд, Швейцария • 2024
           </p>
         </div>
       </footer>
+
+      <PaymentModal open={paymentOpen} onOpenChange={setPaymentOpen} />
     </main>
   );
 };
