@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingCart, Mountain, MapPin, QrCode, Hash } from "lucide-
 import { Link } from "react-router-dom";
 import swissAirJar from "@/assets/swiss-air-jar.png";
 import PaymentModal from "@/components/PaymentModal";
+import ProductModal from "@/components/ProductModal";
 
 interface JarProduct {
   id: string;
@@ -36,13 +37,19 @@ const Shop = () => {
   const [selectedSeries, setSelectedSeries] = useState<"all" | "grindelwald" | "interlaken">("all");
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<JarProduct | null>(null);
+  const [productModalOpen, setProductModalOpen] = useState(false);
 
   const filteredProducts = selectedSeries === "all" 
     ? products 
     : products.filter(p => p.series === selectedSeries);
 
-  const handleBuy = (product: JarProduct) => {
+  const handleProductClick = (product: JarProduct) => {
     setSelectedProduct(product);
+    setProductModalOpen(true);
+  };
+
+  const handleBuyFromModal = () => {
+    setProductModalOpen(false);
     setPaymentOpen(true);
   };
 
@@ -113,7 +120,7 @@ const Shop = () => {
               <ProductCard 
                 key={product.id} 
                 product={product} 
-                onBuy={() => handleBuy(product)}
+                onClick={() => handleProductClick(product)}
               />
             ))}
           </div>
@@ -182,6 +189,12 @@ const Shop = () => {
         </div>
       </footer>
 
+      <ProductModal 
+        product={selectedProduct}
+        open={productModalOpen}
+        onOpenChange={setProductModalOpen}
+        onBuy={handleBuyFromModal}
+      />
       <PaymentModal open={paymentOpen} onOpenChange={setPaymentOpen} />
     </main>
   );
@@ -208,12 +221,15 @@ const FilterButton = ({ children, active, onClick }: { children: React.ReactNode
   </button>
 );
 
-const ProductCard = ({ product, onBuy }: { product: JarProduct; onBuy: () => void }) => (
-  <div className="glass-card rounded-2xl p-6 flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300">
+const ProductCard = ({ product, onClick }: { product: JarProduct; onClick: () => void }) => (
+  <div 
+    className="glass-card rounded-2xl p-6 flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300 cursor-pointer group"
+    onClick={onClick}
+  >
     <img 
       src={swissAirJar} 
       alt={`Баночка с воздухом ${product.mountain}`}
-      className="w-32 h-32 object-contain mb-4"
+      className="w-32 h-32 object-contain mb-4 group-hover:scale-110 transition-transform duration-300"
     />
     <h3 className="font-serif text-2xl text-foreground mb-1">{product.mountain}</h3>
     <div className="flex items-center gap-2 text-primary font-medium mb-2">
@@ -225,21 +241,9 @@ const ProductCard = ({ product, onBuy }: { product: JarProduct; onBuy: () => voi
       <span>{product.region}</span>
     </div>
     <p className="text-2xl font-semibold text-foreground mb-4">CHF {product.price}</p>
-    <Button 
-      variant={product.available ? "alpine" : "outline"}
-      className="w-full"
-      disabled={!product.available}
-      onClick={onBuy}
-    >
-      {product.available ? (
-        <>
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          Купить
-        </>
-      ) : (
-        "Скоро в продаже"
-      )}
-    </Button>
+    <span className={`text-sm font-medium ${product.available ? 'text-primary' : 'text-muted-foreground'}`}>
+      {product.available ? "Нажмите для подробностей" : "Скоро в продаже"}
+    </span>
   </div>
 );
 
