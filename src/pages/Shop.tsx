@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import swissAirJar from "@/assets/swiss-air-jar.png";
 import PaymentModal from "@/components/PaymentModal";
 import ProductModal from "@/components/ProductModal";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 interface JarProduct {
   id: string;
@@ -34,6 +36,7 @@ const products: JarProduct[] = [
 ];
 
 const Shop = () => {
+  const { t } = useLanguage();
   const [selectedSeries, setSelectedSeries] = useState<"all" | "grindelwald" | "interlaken">("all");
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<JarProduct | null>(null);
@@ -60,9 +63,12 @@ const Shop = () => {
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-5 h-5" />
-            <span>На главную</span>
+            <span>{t('shopBackToHome')}</span>
           </Link>
-          <span className="font-serif text-xl text-primary">#SwissAirGame</span>
+          <div className="flex items-center gap-4">
+            <span className="font-serif text-xl text-primary">#SwissAirGame</span>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 
@@ -70,17 +76,16 @@ const Shop = () => {
       <section className="section-padding bg-gradient-to-b from-alpine-mist to-background">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="font-serif text-4xl md:text-6xl mb-6 text-foreground">
-            Магазин Сувениров
+            {t('shopTitle')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Коллекционные баночки с воздухом из Швейцарских Альп. 
-            Каждая баночка — это высота, воспоминание и часть игры-путешествия.
+            {t('shopDescription')}
           </p>
           
           {/* Features */}
           <div className="flex flex-wrap justify-center gap-6 mb-12">
-            <FeatureBadge icon={Mountain} text="3D-печать" />
-            <FeatureBadge icon={QrCode} text="QR-код внутри" />
+            <FeatureBadge icon={Mountain} text={t('shop3dPrint')} />
+            <FeatureBadge icon={QrCode} text={t('shopQrInside')} />
             <FeatureBadge icon={Hash} text="#SwissAirGame" />
           </div>
         </div>
@@ -94,19 +99,19 @@ const Shop = () => {
               active={selectedSeries === "all"} 
               onClick={() => setSelectedSeries("all")}
             >
-              Все серии
+              {t('shopAllSeries')}
             </FilterButton>
             <FilterButton 
               active={selectedSeries === "grindelwald"} 
               onClick={() => setSelectedSeries("grindelwald")}
             >
-              🏔 Гриндельвальд
+              {t('shopGrindelwald')}
             </FilterButton>
             <FilterButton 
               active={selectedSeries === "interlaken"} 
               onClick={() => setSelectedSeries("interlaken")}
             >
-              🌊 Интерлакен
+              {t('shopInterlaken')}
             </FilterButton>
           </div>
         </div>
@@ -121,6 +126,7 @@ const Shop = () => {
                 key={product.id} 
                 product={product} 
                 onClick={() => handleProductClick(product)}
+                t={t}
               />
             ))}
           </div>
@@ -131,16 +137,15 @@ const Shop = () => {
       <section className="section-padding bg-alpine-mist">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="font-serif text-3xl md:text-4xl mb-6 text-foreground">
-            Игровой элемент
+            {t('shopGameElement')}
           </h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Каждая баночка — часть игры. Собери коллекцию высот, делай фото на фоне гор 
-            и делись с хештегом #SwissAirGame
+            {t('shopGameElementText')}
           </p>
           <div className="grid md:grid-cols-3 gap-6">
-            <GameStep number={1} text="Начни с долины" />
-            <GameStep number={2} text="Поднимайся выше" />
-            <GameStep number={3} text="Поймай все вершины" />
+            <GameStep number={1} text={t('shopStep1')} />
+            <GameStep number={2} text={t('shopStep2')} />
+            <GameStep number={3} text={t('shopStep3')} />
           </div>
         </div>
       </section>
@@ -149,15 +154,15 @@ const Shop = () => {
       <section className="section-padding bg-background">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-serif text-3xl md:text-4xl mb-8 text-foreground">
-            Это не просто воздух в банке
+            {t('shopNotJustAir')}
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <EmotionCard text="Воспоминание" />
-            <EmotionCard text="Момент" />
-            <EmotionCard text="Высота" />
-            <EmotionCard text="Место, где ты был" />
-            <EmotionCard text="Символ чистоты" />
-            <EmotionCard text="Часть коллекции" />
+            <EmotionCard text={t('shopMemory')} />
+            <EmotionCard text={t('shopMoment')} />
+            <EmotionCard text={t('shopHeight')} />
+            <EmotionCard text={t('shopPlaceYouWere')} />
+            <EmotionCard text={t('shopPuritySymbol')} />
+            <EmotionCard text={t('shopPartOfCollection')} />
           </div>
         </div>
       </section>
@@ -166,15 +171,15 @@ const Shop = () => {
       <section className="section-padding bg-gradient-to-b from-alpine-mist to-alpine-sky/20">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-serif text-3xl md:text-4xl mb-4 text-foreground">
-            Поделись в соцсетях
+            {t('shopShareSocial')}
           </h2>
           <p className="text-2xl font-serif text-primary mb-6">#SwissAirGame</p>
           <p className="text-muted-foreground mb-8">
-            «Покажи, на какой высоте ты сегодня»<br />
-            «Какой воздух у тебя дома»
+            {t('shopShowHeight')}<br />
+            {t('shopWhatAirHome')}
           </p>
           <p className="text-sm text-muted-foreground">
-            Лучшие фото — репост в официальном аккаунте
+            {t('shopBestPhotos')}
           </p>
         </div>
       </section>
@@ -184,7 +189,7 @@ const Shop = () => {
         <div className="max-w-4xl mx-auto text-center">
           <span className="font-serif text-lg">#SwissAirGame</span>
           <p className="text-primary-foreground/60 text-sm mt-2">
-            Швейцария • Коллекционные сувениры
+            {t('shopFooter')}
           </p>
         </div>
       </footer>
@@ -221,14 +226,14 @@ const FilterButton = ({ children, active, onClick }: { children: React.ReactNode
   </button>
 );
 
-const ProductCard = ({ product, onClick }: { product: JarProduct; onClick: () => void }) => (
+const ProductCard = ({ product, onClick, t }: { product: JarProduct; onClick: () => void; t: (key: string) => string }) => (
   <div 
     className="glass-card rounded-2xl p-6 flex flex-col items-center text-center hover:scale-[1.02] transition-transform duration-300 cursor-pointer group"
     onClick={onClick}
   >
     <img 
       src={swissAirJar} 
-      alt={`Баночка с воздухом ${product.mountain}`}
+      alt={`${product.mountain} air jar`}
       className="w-32 h-32 object-contain mb-4 group-hover:scale-110 transition-transform duration-300"
     />
     <h3 className="font-serif text-2xl text-foreground mb-1">{product.mountain}</h3>
@@ -242,7 +247,7 @@ const ProductCard = ({ product, onClick }: { product: JarProduct; onClick: () =>
     </div>
     <p className="text-2xl font-semibold text-foreground mb-4">CHF {product.price}</p>
     <span className={`text-sm font-medium ${product.available ? 'text-primary' : 'text-muted-foreground'}`}>
-      {product.available ? "Нажмите для подробностей" : "Скоро в продаже"}
+      {product.available ? t('shopClickDetails') : t('shopComingSoon')}
     </span>
   </div>
 );
